@@ -18,6 +18,4 @@ data class Task(
 
     @SerializedName("description")
     val description: String
-
-
 )

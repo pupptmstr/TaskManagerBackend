@@ -8,7 +8,7 @@ import com.pupptmstr.taskmanager.models.Task
 class TaskManager {
     private var body = mutableListOf<Task>()
     private val builder = GsonBuilder()
-    private val gson: Gson = builder.create()
+    private val gson: Gson = builder.setPrettyPrinting().create()
 
     @get:Synchronized
     val all: String
@@ -51,7 +51,8 @@ class TaskManager {
             if (task.id < 0) {
                 throw IndexOutOfBoundsException()
             }
-            body.add(task)
+            val newTask = Task(body.lastIndex + 1, task.status, task.startTime, task.deadline, task.description)
+            body.add(newTask)
             gson.toJson(body[body.lastIndex])
         } catch (e: Exception) {
             "error"

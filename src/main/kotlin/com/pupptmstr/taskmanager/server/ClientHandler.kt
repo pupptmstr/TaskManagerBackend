@@ -5,7 +5,9 @@ import com.google.gson.GsonBuilder
 import com.pupptmstr.taskmanager.models.EternalErrorResponse
 import com.pupptmstr.taskmanager.models.Path
 import com.pupptmstr.taskmanager.models.Task
+import com.pupptmstr.taskmanager.models.TaskDeserializer
 import com.sun.net.httpserver.HttpExchange
+import java.io.*
 import java.lang.NumberFormatException
 import java.time.LocalDate
 
@@ -15,9 +17,14 @@ class ClientHandler(private val exchange: HttpExchange, private val taskManager:
         println("handled exchange")
         val path = Path(exchange.requestURI.path)
         val method = exchange.requestMethod
-        val requestBody = exchange.requestBody.readAllBytes()
+        val inputStream: InputStream = exchange.requestBody
+        val stringBuilder = StringBuilder()
+        BufferedReader(InputStreamReader(inputStream)).lines().forEach {
+            stringBuilder.append(it).append("\n")
+        }
+        val requestBody = stringBuilder.toString()
 
-        when (method) {
+            when (method) {
             "GET" -> {
                 if (path.base == "get") {
                     when (path.tale) {
@@ -78,7 +85,7 @@ class ClientHandler(private val exchange: HttpExchange, private val taskManager:
         }
     }
 
-    private fun getIdFromRequest(body: ByteArray): Int {
+    private fun getIdFromRequest(body: String): Int {
         return try {
             val task = getTaskFromRequest(body)
             task.id
@@ -87,12 +94,13 @@ class ClientHandler(private val exchange: HttpExchange, private val taskManager:
         }
     }
 
-    private fun getTaskFromRequest(body: ByteArray): Task {
+    private fun getTaskFromRequest(body: String): Task {
         return try {
             val builder = GsonBuilder()
-            val gson: Gson = builder.create()
-            gson.fromJson(body.toString(), Task::class.java)
+            val gson: Gson = builder.registerTypeAdapter(Task::class.java, TaskDeserializer()).create()
+            gson.fromJson(body, Task::class.java)
         } catch (e: Exception) {
+            e.printStackTrace()
             Task(-1, "error", LocalDate.now(), LocalDate.now(), "error")
         }
     }
@@ -117,10 +125,11 @@ class ClientHandler(private val exchange: HttpExchange, private val taskManager:
         body: String,
         code: Int
     ) {
-        val outputStream = exchange.responseBody
+        val outputStream = BufferedOutputStream(exchange.responseBody)
+        val resBody = body.toByteArray()
         exchange.responseHeaders.set("Content-Type", "application/json")
-        exchange.sendResponseHeaders(code, body.length.toLong())
-        outputStream.write(body.toByteArray())
+        exchange.sendResponseHeaders(code, resBody.size.toLong())
+        outputStream.write(resBody)
         outputStream.flush()
         outputStream.close()
     }
