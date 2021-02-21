@@ -1,4 +1,4 @@
-package com.pupptmstr.taskmanager
+package com.pupptmstr.taskmanager.models
 
 class Path(path: String) {
     val base: String

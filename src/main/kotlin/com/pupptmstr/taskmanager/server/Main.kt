@@ -1,5 +1,6 @@
 package com.pupptmstr.taskmanager
 
+import com.pupptmstr.taskmanager.server.Server
 import com.sun.net.httpserver.HttpServer
 import java.net.InetSocketAddress
 
