@@ -133,17 +133,17 @@
 - Убедились, что все в порядке
   
 
-![Иллюстрация 1]()
+![Иллюстрация 1](https://github.com/pupptmstr/TaskManagerBackend/blob/master/images/1.png)
 
-![Иллюстрация 2]()
+![Иллюстрация 2](https://github.com/pupptmstr/TaskManagerBackend/blob/master/images/2.png)
 
-![Иллюстрация 3]()
+![Иллюстрация 3](https://github.com/pupptmstr/TaskManagerBackend/blob/master/images/3.png)
 
-![Иллюстрация 4]()
+![Иллюстрация 4](https://github.com/pupptmstr/TaskManagerBackend/blob/master/images/4.png)
 
-![Иллюстрация 5]()
+![Иллюстрация 5](https://github.com/pupptmstr/TaskManagerBackend/blob/master/images/5.png)
 
-![Иллюстрация 6]()
+![Иллюстрация 6](https://github.com/pupptmstr/TaskManagerBackend/blob/master/images/6.png)
 
 
 
