@@ -6,7 +6,7 @@ import com.pupptmstr.taskmanager.models.Task
 
 
 class TaskManager {
-    private var body = mutableListOf<Task>()
+    private var body = mutableMapOf<Int, Task>()
     private val builder = GsonBuilder()
     private val gson: Gson = builder.setPrettyPrinting().create()
 
@@ -38,7 +38,7 @@ class TaskManager {
     fun deleteById(id: Int): String {
         return try {
             val element = body[id]
-            body.removeAt(id)
+            body.remove(id)
             gson.toJson(element)
         } catch (e: IndexOutOfBoundsException) {
             "error"
@@ -51,9 +51,16 @@ class TaskManager {
             if (task.id < 0) {
                 throw IndexOutOfBoundsException()
             }
-            val newTask = Task(body.lastIndex + 1, task.status, task.startTime, task.deadline, task.description)
-            body.add(newTask)
-            gson.toJson(body[body.lastIndex])
+            val keys = body.keys
+            var newId = 0
+            for (i in keys) {
+                if (i == newId) {
+                    newId++
+                }
+            }
+            val newTask = Task(newId, task.status, task.startTime, task.deadline, task.description)
+            body[newId] = newTask
+            gson.toJson(body[newId])
         } catch (e: Exception) {
             "error"
         }
